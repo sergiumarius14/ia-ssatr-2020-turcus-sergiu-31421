@@ -24,3 +24,6 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /bank-sim/target/
+/curs3-ssatr-ia/target/
+/curs2-ssatr-ia/target/
+/aplicatie-parcare/target/
