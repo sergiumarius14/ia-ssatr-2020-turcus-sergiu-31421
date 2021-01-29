@@ -15,6 +15,11 @@ public class Train {
     private int number;
     private int stopTime;
 
+    public Train(String rank, int number) {
+        this.rank = rank;
+        this.number = number;
+    }
+
     public Train(String Rank, int number, int stopTime) {
         this.rank = Rank;
         this.number = number;

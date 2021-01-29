@@ -42,13 +42,12 @@ public class TrainClient extends Thread {
         int trainNumber = parseInt(RandomStringUtils.randomNumeric(3));
         int idx = new Random().nextInt(TrainRank.values().length);
         String rank = TrainRank.values()[idx].toString();
-        int stopTime = parseInt(RandomStringUtils.randomNumeric(4));
-        return new Train(rank, trainNumber, stopTime);
+        return new Train(rank, trainNumber);
     }
 
     private String getTrainString(Train t) {
 
-        return t.getRank() + " " + t.getNumber() + " " + t.getStopTime();
+        return t.getRank() + " " + t.getNumber();
     }
 
     public void run() {
@@ -59,9 +58,19 @@ public class TrainClient extends Thread {
                 String train = getTrainString(t);
                 fluxOut.println(train);
                 line = fluxIn.readLine();
-                System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara! Acesta va stationa " + t.getStopTime() / 1000 + " minute!");
+                //TODO: add platform where train stops
+                if (parseInt(line) / 1000 != 0) {
+                       System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara! Acesta va stationa " + parseInt(line) / 1000 + " minute!");
+                    } else {
+                        System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " va trece prin gara!");
+                    }
                 try {
-                    Thread.sleep(t.getStopTime());
+                    Thread.sleep(parseInt(line));
+                    if (parseInt(line) / 1000 != 0) {
+                        System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a parasit gara!");
+                    } else {
+                        System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a trecut prin gara!");
+                    }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
                 }

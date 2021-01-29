@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import static java.lang.Integer.parseInt;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  *
@@ -78,12 +80,11 @@ class ClientHandler extends Thread {
         this.server = server;
     }
 
-    private Train getTrain(String trainString) {
+    private Train getTrain(String trainString, String stopTime) {
         StringTokenizer st = new StringTokenizer(trainString);
         String rank = st.nextToken();
         int number = Integer.parseInt(st.nextToken());
-        int stopTime = Integer.parseInt(st.nextToken());
-        return new Train(rank, number, stopTime);
+        return new Train(rank, number, parseInt(stopTime));
     }
 
     public void run() {
@@ -91,9 +92,12 @@ class ClientHandler extends Thread {
             while (true) {
 
                 String msg = fluxIn.readLine();
-                Train t= getTrain(msg);
-                System.out.println("Train station receive train: " + msg);
-                server.sendMessageToAll(msg);
+                String stopTime = RandomStringUtils.randomNumeric(4);
+                Train t = getTrain(msg, stopTime);
+                System.out.println("Train station receive train: " + msg + " " + stopTime);
+                //TODO: give a platform where train stops
+                String response = stopTime;
+                server.sendMessageToAll(response);
             }
 
         } catch (IOException ex) {
