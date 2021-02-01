@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import static java.lang.Integer.parseInt;
 import java.net.Socket;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -58,15 +59,18 @@ public class TrainClient extends Thread {
                 String train = getTrainString(t);
                 fluxOut.println(train);
                 line = fluxIn.readLine();
+                StringTokenizer st = new StringTokenizer(line);
+                String stopTime = st.nextToken();
+                String platform = st.nextToken();
                 //TODO: add platform where train stops
-                if (parseInt(line) / 1000 != 0) {
-                       System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara! Acesta va stationa " + parseInt(line) / 1000 + " minute!");
+                if (parseInt(stopTime) / 1000 != 0) {
+                       System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara la "+platform+"! Acesta va stationa " + parseInt(stopTime) / 1000 + " minute!");
                     } else {
                         System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " va trece prin gara!");
                     }
                 try {
-                    Thread.sleep(parseInt(line));
-                    if (parseInt(line) / 1000 != 0) {
+                    Thread.sleep(parseInt(stopTime));
+                    if (parseInt(stopTime) / 1000 != 0) {
                         System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a parasit gara!");
                     } else {
                         System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a trecut prin gara!");
@@ -74,6 +78,7 @@ public class TrainClient extends Thread {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                fluxOut.println("Leaving " + platform);
             } catch (IOException ex) {
                 Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
                 break;
