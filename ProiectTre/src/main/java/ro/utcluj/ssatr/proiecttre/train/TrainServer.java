@@ -72,19 +72,20 @@ public class TrainServer {
         srv.startServer();
     }
 
-    public String makePlatformUnavailable() {
+    public String makePlatformUnavailable(String train) {
         String platform = availablePlatformList.get(0);
         availablePlatformList.removeIf(availablePlatform -> availablePlatform.equals(platform));
         unavailablePlatformList.add(platform);
         gui.setPlatformColor(platform, "unavailable");
+        gui.showTrain(platform, "unavailable", train);
         return platform;
     }
 
     void makePlatformAvailable(String platform) {
-        //Search in unavailable patfrom the right platform and make it available
         unavailablePlatformList.remove(platform);
         availablePlatformList.add(platform);
         gui.setPlatformColor(platform, "available");
+        gui.showTrain(platform, "available", "");
     }
 }
 //.class
@@ -118,16 +119,12 @@ class ClientHandler extends Thread {
                 String msg = fluxIn.readLine();
                 String stopTime = RandomStringUtils.randomNumeric(4);
                 Train t = getTrain(msg, stopTime);
-                String platform = server.makePlatformUnavailable();
+                String platform = server.makePlatformUnavailable(t.getRank() + " " + String.valueOf(t.getNumber()));
                 System.out.println("Train station receive train: " + msg);
-                System.out.println("Train " + t.getNumber() + " is at " + platform + " for " + Integer.parseInt(stopTime) / 1000 + " minutes (" + stopTime + " seconds)"
-                );
+                System.out.println("Train " + t.getNumber() + " is at " + platform + " for " + Integer.parseInt(stopTime) / 1000 + " minutes (" + stopTime + " seconds)");
                 String response = stopTime + " " + platform;
                 sendMessage(response);
                 msg = fluxIn.readLine();
-//                StringTokenizer st = new StringTokenizer(msg);
-//                String clientMsg = st.nextToken();
-//                platform = st.nextToken();
                 server.makePlatformAvailable(platform);
             }
 

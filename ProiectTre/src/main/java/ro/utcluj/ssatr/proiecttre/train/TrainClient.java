@@ -47,7 +47,6 @@ public class TrainClient extends Thread {
     }
 
     private String getTrainString(Train t) {
-
         return t.getRank() + " " + t.getNumber();
     }
 
@@ -64,10 +63,10 @@ public class TrainClient extends Thread {
                 String platform = st.nextToken();
                 //TODO: add platform where train stops
                 if (parseInt(stopTime) / 1000 != 0) {
-                       System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara la "+platform+"! Acesta va stationa " + parseInt(stopTime) / 1000 + " minute!");
-                    } else {
-                        System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " va trece prin gara!");
-                    }
+                    System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " a ajuns in gara la " + platform + "! Acesta va stationa " + parseInt(stopTime) / 1000 + " minute!");
+                } else {
+                    System.out.println("Trenul " + t.getRank() + " " + t.getNumber() + " va trece prin gara!");
+                }
                 try {
                     Thread.sleep(parseInt(stopTime));
                     if (parseInt(stopTime) / 1000 != 0) {
@@ -79,11 +78,15 @@ public class TrainClient extends Thread {
                     Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 fluxOut.println("Leaving " + platform);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(TrainClient.class.getName()).log(Level.SEVERE, null, ex);
                 break;
             }
-
         }
     }
 
@@ -94,7 +97,5 @@ public class TrainClient extends Thread {
     public static void main(String[] args) throws IOException {
         TrainClient c = new TrainClient();
         c.start();
-
     }
-
 }
