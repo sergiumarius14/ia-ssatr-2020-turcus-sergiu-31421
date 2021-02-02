@@ -32,6 +32,11 @@ public class TrainServer {
     ArrayList<ClientHandler> clients = new ArrayList<>();
     List<String> availablePlatformList = Collections.synchronizedList(new ArrayList(Arrays.asList("Platform-1", "Platform-2", "Platform-3", "Platform-4")));
     List<String> unavailablePlatformList = Collections.synchronizedList(new ArrayList<String>());
+    TrainStationJFrame gui;
+
+    public void initGui(TrainStationJFrame gui) {
+        this.gui = gui;
+    }
 
     public void startServer() {
 
@@ -60,6 +65,10 @@ public class TrainServer {
 
     public static void main(String[] args) {
         TrainServer srv = new TrainServer();
+
+        TrainStationJFrame gui = new TrainStationJFrame();
+        srv.initGui(gui);
+        gui.setVisible(true);
         srv.startServer();
     }
 
@@ -67,6 +76,7 @@ public class TrainServer {
         String platform = availablePlatformList.get(0);
         availablePlatformList.removeIf(availablePlatform -> availablePlatform.equals(platform));
         unavailablePlatformList.add(platform);
+        gui.setPlatformColor(platform, "unavailable");
         return platform;
     }
 
@@ -74,6 +84,7 @@ public class TrainServer {
         //Search in unavailable patfrom the right platform and make it available
         unavailablePlatformList.remove(platform);
         availablePlatformList.add(platform);
+        gui.setPlatformColor(platform, "available");
     }
 }
 //.class
